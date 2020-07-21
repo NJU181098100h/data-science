@@ -107,7 +107,7 @@ import random
 
 #### 学生编号、题目编号、题目类型处理
 
-在`test_data.json`中，`user_id`和`case_id`都是字符串类型的数据，且没有从0开始每次加1编号，于是我们就把`user_id`和`case_id`重新编号，都从0开始，每次加1，一共有271名学生，882道题，所以处理过后的学生编号为0~270，题目编号为0~881。
+在`test_data.json`中，`user_id`和`case_id`都是字符串类型的数据，且没有从0开始每次加1编号，于是我们就把`user_id`和`case_id`重新编号，都从0开始，每次加1，一共有271名学生，882道题，所以处理过后的学生编号为0到270，题目编号为0到881。
 
 ```python
 userIds=[str(i) for i in sorted([int(i) for i in list(test_data.keys())])]
