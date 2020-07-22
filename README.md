@@ -547,6 +547,10 @@ def getCodeRunTime(code_url,userId,caseId):
         return -1
 ```
 
+部分下载的代码如下。
+
+![image.png](https://i.loli.net/2020/07/22/5jcPa9iz3lgWIK8.png)
+
 #### 函数说明：`getUserIdsByCaseId`
 
 获取做了某道题目
