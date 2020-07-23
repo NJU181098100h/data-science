@@ -22,7 +22,7 @@
 
 ## 关键词
 
-`scikit-learn` `PyTorch` `NumPy` `Pandas` `matplotlib` `数据清洗` `特征工程` `主成分分析` `深度自编码器` `变分自编码器` `K-means聚类分析` 
+`scikit-learn` `PyTorch` `NumPy` `Pandas` `matplotlib` `数据清洗` `特征工程` `数据可视化` `主成分分析` `深度自编码器` `变分自编码器` `K-means聚类分析` 
 
 ## 研究问题
 
@@ -101,6 +101,7 @@ import win32api
 import matplotlib.pyplot as plt # 画图工具
 import random
 import difflib # 用于检测代码是否抄袭的工具
+import seaborn as sns # 画图工具
 ```
 
 ![download.jpg](https://i.loli.net/2020/07/21/1B2WrXFQ7feO6vd.jpg)
@@ -112,6 +113,10 @@ import difflib # 用于检测代码是否抄袭的工具
 ![download.png](https://i.loli.net/2020/07/22/swUcyFXzVROBu3n.png)
 
 `matplotlib`是一个数据科学的画图工具，可以帮助我们更好地展示分析结果、判断分析方法是否正确等。
+
+![download.png](https://i.loli.net/2020/07/23/BgjG6LrEfDyxhbe.png)
+
+`seaborn`是一个基于`matplotlib`的数据可视化工具，可以画出丰富的统计图形。
 
 ![download.png](https://i.loli.net/2020/07/21/GNuL73Y8DT2ms5n.png)
 
@@ -1053,9 +1058,39 @@ def difficult_degree(caseId):
     :return:
     """
     return -cases_analysis_result.iloc[caseId]['finishRate']-cases_analysis_result.iloc[caseId]['scoreIgnoreUndo']-cases_analysis_result.iloc[caseId]['scoreCountUndo']+cases_analysis_result.iloc[caseId]['uploadAvg']+cases_analysis_result.iloc[caseId]['uploadAvgInFact']+cases_analysis_result.iloc[caseId]['timeSpan']+cases_analysis_result.iloc[caseId]['avgRunTime']
+def getTypeDifficultDegree(typeId):
+    d=0
+    for caseId in caseIdsByType[typeId]:
+        d+=difficult_degree(caseId)
+    return d/len(caseIdsByType[typeId])
+def getGroupDifficultDegree(groupId):
+    d=0
+    for caseId in groupCaseIds[groupId]:
+        d+=difficult_degree(caseId)
+    return d/len(groupCaseIds[groupId])
+def getDifficultDegreeByGroupAndType(groupId,typeId):
+    d=0
+    n=0
+    for caseId in groupCaseIds[groupId]:
+        if caseId in caseIdsByType[typeId]:
+            n+=1
+            d+=difficult_degree(caseId)
+    return d/n
 ```
 
-TODO 画图
+下图是对所有题目按题目类型分类的各项指标的统计雷达图，其中平均得分为该题的总得分除以应该做这道题的人数，如果有学生应该做而未做这道题，则会以0分计入；平均得分（ignore）是实际做了这道题的学生的平均得分，即会忽略没有做的人，比如，这道题只有一个人做了且得分为100，则这道题的平均得分为100；难度为上述`difficult_degree`函数计算出的难度系数，从下图中可以看出八种类型的题目在难度系数上的区分度是最明显的，其中最难的题目类型为图结构，这个结果也很符合我们的预期（图结构的题目真的难到爆，根本完全没有任何学会的可能），由此看来，我们之前定义的难度系数的计算函数还是比较合理的；处理上述指标之外，还画出了完成率、平均上传次数、平均做题时间跨度这些指标，老师可以根据不同的指标来评估学生对于不同类型的题目掌握情况，从而动态地调整教学计划。
+
+![image.png](https://i.loli.net/2020/07/23/WMyAXxQS5ia31Nm.png)
+
+除了可以根据预先定义的难度系数来评估题目的难度，当然我们也提供了直接基于平均分的难度评估，下面是八种类型的题目的平均分可视化结果。其中`Count`表示计算平均分时会把应该做而没有做这道题的学生的分数记为0分，`Ignore`表示只会计算做了这道题的学生的分数而忽略未做的，`Count`和`Ignore`之间存在着一定的差距。
+
+![image.png](https://i.loli.net/2020/07/23/7y5W1XITjs2DRbv.png)
+
+除了按题目类型分类整理相应的数据，我们也做了按小组分类整理题目的相关数据，其可视化结果如下所示，老师可以根据以下图表更好的掌握各组同学的编程能力。
+
+![image.png](https://i.loli.net/2020/07/23/ZYJ5yks28qTrnHh.png)
+
+具体可视化部分的代码详见`workspace.ipynb`。
 
 #### 基于学生答题表现的聚类分析
 
@@ -1149,7 +1184,13 @@ def getGoodnessOfGroup(groupId):
     return s/len(groupCaseIds[groupId])
 ```
 
-TODO 画图
+下图是按题目类型分类的题目平均质量统计条形图，八种类型的题目的平均质量差异不是很大，这也符合我们的预期。
+
+![image.png](https://i.loli.net/2020/07/23/p3QVeablNLuZhnj.png)
+
+下图是按小组分类的题目平均质量统计图。
+
+![image.png](https://i.loli.net/2020/07/23/d2Snli4L9IXvBbg.png)
 
 #### 面向测试用例编程检测器
 
@@ -1230,3 +1271,64 @@ def copy_detector(path1,path2,threshold=0.6):
 #### 寻找编程搭档
 
 #### 自动推荐代码
+
+## 附录
+
+此部分主要是一些帮助读者理解的数据可视化成果展示。
+
+对于每一道题目，我们都提供了画了三张图，以供读者了解这道题的基本情况。分别是分数分布图，忽略未做学生的平均分、不忽略没做学生的平均分条形图，以及完成率、难度、运行时间等指标的雷达图。
+
+```python
+def getViewByCaseId(x):
+    mp.figure(figsize=(15,8), dpi=80)
+    mp.figure(1)
+    #
+    ax1=mp.subplot(131)
+    label='CaseId:'+str(x)+' 分数分布'
+    caseScore=pd.DataFrame(np.array(caseAllScores[x]).reshape(1,-1))
+    bins = np.arange(0, 101, 10)
+    ax1.set_title(label,loc='left')
+    ax1.set_xticks(range(0,101,10))
+    ax1.set_xlabel('分数段')
+    ax1.set_ylabel('人数')
+    sns.distplot(caseScore,bins=10,ax=ax1,rug=True,rug_kws = {'color' : 'r'},
+            kde_kws = {'bw' : 2})
+    #
+    ax2=mp.subplot(132)
+    group=["Count","Ignore"]
+    mean=np.array([caseScoreCountUndo[x],caseScoreIgnoreUndo[x]])
+    ax2.set_title('Avarage Score')
+    mp.bar(group,mean,color='c',width=0.6,align='center')
+    #雷达图
+    ax3=mp.subplot(133, polar=True)
+    labels=['运行时间','完成率','难度','时间跨度','上传次数']
+    kinds=['CaseId:'+str(x)]
+    CR=pd.DataFrame([[runtime[x]*100000,fr[x]*100,difficulty[x]*30,spanTime[x]/5,uploadSum[x]]]
+    ,columns=['运行时间','完成率','难度','时间跨度','上传次数'])
+    result=pd.concat([CR,CR['运行时间']],axis=1)
+    centers=np.array(result.iloc[:,:])
+    n=len(labels)
+    angle=np.linspace(0,2*np.pi,n,endpoint=False)
+    angle=np.concatenate((angle,[angle[0]]))
+    pic=[]
+    for i in range(len(kinds)):
+        pic.append(ax3.plot(angle,centers[i],linewidth=2,label=kinds[i]))
+    ax3.set_thetagrids(angle*180/np.pi,labels)
+    ax3.legend(loc='lower left')
+    mp.show()
+for i in random.sample(range(882),5):
+    getViewByCaseId(i)
+```
+
+下面是几个示例。
+
+![image.png](https://i.loli.net/2020/07/23/JEKyPRgUdtsqObm.png)
+
+![image.png](https://i.loli.net/2020/07/23/tPc24UqvdlXb7ya.png)
+
+![image.png](https://i.loli.net/2020/07/23/eV5Xtv1Td3roKcJ.png)
+
+![image.png](https://i.loli.net/2020/07/23/FmOGy8aQrX1Hg7w.png)
+
+![image.png](https://i.loli.net/2020/07/23/6Dk4WRTs1Z8H9gc.png)
+
