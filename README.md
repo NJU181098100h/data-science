@@ -1260,7 +1260,7 @@ def copy_detector(path1,path2,threshold=0.6):
 
 ![image.png](https://i.loli.net/2020/07/23/sQUhyX4CpMYT6Ja.png)
 
-![image-20200723115244939](C:\Users\60960\AppData\Roaming\Typora\typora-user-images\image-20200723115244939.png)
+![image-20200723115244939.png](https://i.loli.net/2020/07/23/XxAk1h5tdYcZvJI.png)
 
 ### 学生视角
 
