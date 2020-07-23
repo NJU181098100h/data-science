@@ -48,7 +48,7 @@
 
 5. 代码抄袭检测器
 
-为了更好地评估学生的做题情况、代码的原创性以及公平性考虑，我们写了一个基于`difflib`的代码抄袭检测器，即判断两个`python`文件的代码的重复率，从而给出是否有抄袭嫌疑的判断。
+为了更好地评估学生的做题情况、代码的原创性以及公平性考虑，我们写了一个基于`pycode_similar`和`difflib`的代码抄袭检测器，即判断两个`python`文件的代码的重复率，从而给出是否有抄袭嫌疑的判断。
 
 ### 学生视角
 
@@ -784,6 +784,19 @@ def getGroupDifficultDegree(groupId):
     return d/len(groupCaseIds[groupId])
 ```
 
+对每组的每种类型的题目进行难度评估
+
+```python
+def getDifficultDegreeByGroupAndType(groupId,typeId):
+    d=0
+    n=0
+    for caseId in groupCaseIds[groupId]:
+        if caseId in caseIdsByType[typeId]:
+            n+=1
+            d+=difficult_degree(caseId)
+    return d/n
+```
+
 #### 保存处理后的题目相关的数据
 
 保存`cases_analysis_result`到`cases_analysis_final.csv`
@@ -1176,6 +1189,37 @@ def test_cases_oriented(path):
 ![image.png](https://i.loli.net/2020/07/22/RcFnqte5KL7WTvP.png)
 
 #### 代码抄袭检测器
+
+由于python练习题有200道，数量较大，难免会有同学想要"借鉴"他人的代码，这种行为不利于老师正确评估学生的编程能力，也不利于学生提高自己的编程水平，更有损公平性，同时也可以检测代码是否抄袭了答案，所以我们编写了一个基于`pycode_similar`和`difflib`的代码抄袭检测器，具体而言，读取两个python文件并解析，利用计算差异的辅助工具`difflib`，计算两个文本的序列相似度，若该值超过预先设定的阈值，则会被判定为有抄袭的嫌疑。具体的实现如下所示。
+
+```python
+def copy_detector(path1,path2,threshold=0.6):
+    with open(path1,encoding='utf-8') as file1:
+        code1=''
+        ls=file1.readlines()
+        for line in ls:
+            temp=line.lstrip()
+            if temp and not temp.startswith('#'):
+                code1+=temp
+    with open(path2,encoding='utf-8') as file2:
+        code2=''
+        ls=file2.readlines()
+        for line in ls:
+            temp=line.lstrip()
+            if temp and not temp.startswith('#'):
+                code2+=temp
+    return difflib.SequenceMatcher(None,code1,code2).ratio()>=threshold
+```
+
+以下是两个有抄袭嫌疑的代码示例。
+
+![image.png](https://i.loli.net/2020/07/23/2w51QKDVJuIfpsU.png)
+
+![image.png](https://i.loli.net/2020/07/23/gXRW8NotFpky3fU.png)
+
+![image.png](https://i.loli.net/2020/07/23/sQUhyX4CpMYT6Ja.png)
+
+![image-20200723115244939](C:\Users\60960\AppData\Roaming\Typora\typora-user-images\image-20200723115244939.png)
 
 ### 学生视角
 
