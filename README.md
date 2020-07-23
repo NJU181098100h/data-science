@@ -1151,15 +1151,15 @@ km_raw=KMeans(n_clusters=8,max_iter=2000).fit(cases_analysis_final)
 
 如何检验聚类效果呢？我们打算采用可视化的方法，把聚类后的数据分类别画在一个二维平面上来看聚类效果。部分的作图结果如下所示，完整结果及代码可在`workspace.ipynb`中查看。
 
-![image.png](https://i.loli.net/2020/07/22/Qz3VWLioSNa4U1D.png)
+![image.png](https://i.loli.net/2020/07/23/B6lcfzdO1eJD3oR.png)
 
-![image.png](https://i.loli.net/2020/07/22/DEFn8gTaQRGKwNe.png)
+![image.png](https://i.loli.net/2020/07/23/9Ft52JcfU8BpZoO.png)
 
-![image.png](https://i.loli.net/2020/07/22/kauO9rABTbvmicJ.png)
+![image.png](https://i.loli.net/2020/07/23/f8IaYMlGwJqupDR.png)
 
-![image.png](https://i.loli.net/2020/07/22/F7khXMb1zmupKe5.png)
+![image.png](https://i.loli.net/2020/07/23/yYsVEqhPjduS9NI.png)
 
-![image.png](https://i.loli.net/2020/07/22/zN5gxXBfut96UcA.png)
+![image.png](https://i.loli.net/2020/07/23/bP4hnfIWi86OaVZ.png)
 
 从图中可以看出，使用不同的方案处理过后的数据进行降维会有不同的聚类结果，此项研究的意义在于，老师可以对学生在哪些题目上的表现相近有一个了解，进而再结合题目的总体得分、完成率等指标可以对学生的整体的编程能力有一个把握，从而制定更加据有针对性的教学计划。
 
