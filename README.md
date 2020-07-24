@@ -1,4 +1,4 @@
-# 数据科学基础 大作业 研究报告
+# 深度学情分析辅助系统 研究报告
 
 [toc]
 
@@ -989,6 +989,10 @@ with open('cases_ae_encode_2_dim.csv',mode='w',newline='') as file:
 
 ![image.png](https://i.loli.net/2020/07/22/ELV7epADuxZjJFH.png)
 
+利用深度自编码器降维到2维的均方误差损失曲线图如下所示。（只画了前100个epoch）
+
+![download.png](https://i.loli.net/2020/07/24/u54e2fHloJYzxWc.png)
+
 除了PCA和深度自编码器，我们采用的第三种降维方式是变分自编码器（VAE），VAE是一种生成模型，它主要对数据的结构进行建模，捕捉数据不同维度之间的关系。变分自编码器能够从高维变量中学习到低维的潜变量，数据集中的每个数据`x`都有一个相对应的潜变量`z`，在此我们利用VAE寻找潜变量的作用来实现对数据的降维。
 
 ![download.png](https://i.loli.net/2020/07/22/j2p6KTsHuyctqJB.png)
@@ -1050,6 +1054,10 @@ def loss_vae(recon_x,x,mu,logvar,criterion):
 ![image.png](https://i.loli.net/2020/07/22/OLnHSTzB65iRruX.png)
 
 ![image.png](https://i.loli.net/2020/07/22/OcQsw78vyES2uFP.png)
+
+利用深度自编码器降维到4维的均方误差损失曲线图如下所示。（只画了前100个epoch）
+
+![download.png](https://i.loli.net/2020/07/24/ZvnS2gtPMUr5WFe.png)
 
 ### 题目视角的分析
 
