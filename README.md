@@ -1067,7 +1067,7 @@ def loss_vae(recon_x,x,mu,logvar,criterion):
 
 以上进行的所有数据清洗、特征工程、探索性数据分析大部分是以题目为中心进行的，下面这部分进行站在学生视角的数据处理，此部分不会运用特别复杂的算法或建模技巧，但会充分利用`test_data.json`提供的所有信息，充分提取与学生相关的所有有用信息，为后续的`学生视角的分析`模块打下坚实的基础。
 
-下面详细解析从`test_data.json`中提取出的有关学生部分的有用信息。详细的代码不再展示，此部分的代码在`workspace.ipynb`中约`530`行处的`## 站在学生视角的数据预处理 ##`处。此部分解析出的有用信息都以保存至`user_info.csv`文件，这是一个`(254,76)`形状的`DataFrame`数组，有`254`行是因为有效学生人数为254（有17名学生做题数量太少被标记为无效数据），下面说明76列的含义。
+下面详细解析从`test_data.json`中提取出的有关学生部分的有用信息。详细的代码不再展示，此部分的代码在`workspace.ipynb`中约`530`行处的`## 站在学生视角的数据预处理 ##`处。此部分解析出的有用信息都以保存至`user_info.csv`文件，这是一个`(254,100)`形状的`DataFrame`数组，有`254`行是因为有效学生人数为254（有17名学生做题数量太少被标记为无效数据），下面说明100列的含义。
 
 - `id`：学生的编号
 - `uploadSum`：提交的总次数
@@ -1085,6 +1085,9 @@ def loss_vae(recon_x,x,mu,logvar,criterion):
 - `avgTimeSpan`：平均每道题目的初次提交和最后一次提交的时间差。
 - `avgScoreOfTypei`：`avgScoreOfType0`、`avgScoreOfType1`一直到`avgScoreOfType7`，表示每种类型的平均得分，应该做而没做的题目会以0分计入。共8列
 - `avgScoreIgnoreUndoOfTypei`：`avgScoreIgnoreUndoOfType0`、`avgScoreIgnoreUndoOfType1`一直到`avgScoreIgnoreUndoOfType7`，表示每种类型的题目的平均得分，会忽略没做的题目。共8列。
+- `uploadSumOfTypei`：`uploadSumOfType0`、`uploadSumOfType1`一直到`uploadSumOfType7`，每类题目的提交总次数，共8列。
+- `avgUploadNumOfTypei`：第`i`类题目的评价提交次数，不忽略没做的。共8列。
+- `avgUploadNumIgnoreUndoOfTypei`：第`i`类题目的平均提交次数，忽略没做的。共8列。
 
 `user_info.csv`的部分截图。
 
@@ -1324,7 +1327,7 @@ def copy_detector(path1,path2,threshold=0.6):
 
 #### 寻找编程搭档
 
-## 附录
+## 附录也很精彩
 
 此部分主要是一些帮助读者理解的数据可视化成果展示。
 
