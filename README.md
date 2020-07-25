@@ -73,9 +73,11 @@
 
 ## 开源代码地址
 
-https://github.com/SWargrave/data-science
+GitHub项目地址：https://github.com/SWargrave/data-science
 
-快速预览所有代码：http://file.jwargrave.com/data-science （PDF格式）
+直接下载项目所有文件：http://file.jwargrave.com/datascience
+
+快速预览所有代码：http://file.jwargrave.com/data-science-code （PDF格式）
 
 ## 研究方法
 
