@@ -1067,7 +1067,7 @@ def loss_vae(recon_x,x,mu,logvar,criterion):
 
 以上进行的所有数据清洗、特征工程、探索性数据分析大部分是以题目为中心进行的，下面这部分进行站在学生视角的数据处理，此部分不会运用特别复杂的算法或建模技巧，但会充分利用`test_data.json`提供的所有信息，充分提取与学生相关的所有有用信息，为后续的`学生视角的分析`模块打下坚实的基础。
 
-下面详细解析从`test_data.json`中提取出的有关学生部分的有用信息。详细的代码不再展示，此部分的代码在`workspace.ipynb`中约`530`行处的`## 站在学生视角的数据预处理 ##`处。此部分解析出的有用信息都以保存至`user_info.csv`文件，这是一个`(254,100)`形状的`DataFrame`数组，有`254`行是因为有效学生人数为254（有17名学生做题数量太少被标记为无效数据），下面说明100列的含义。
+下面详细解析从`test_data.json`中提取出的有关学生部分的有用信息。详细的代码不再展示，此部分的代码在`workspace.ipynb`中约`530`行处的`## 站在学生视角的数据预处理 ##`处。此部分解析出的有用信息都以保存至`user_info.csv`文件，这是一个`(254,108)`形状的`DataFrame`数组，有`254`行是因为有效学生人数为254（有17名学生做题数量太少被标记为无效数据），下面说明108列的含义。
 
 - `id`：学生的编号
 - `uploadSum`：提交的总次数
@@ -1088,6 +1088,7 @@ def loss_vae(recon_x,x,mu,logvar,criterion):
 - `uploadSumOfTypei`：`uploadSumOfType0`、`uploadSumOfType1`一直到`uploadSumOfType7`，每类题目的提交总次数，共8列。
 - `avgUploadNumOfTypei`：第`i`类题目的评价提交次数，不忽略没做的。共8列。
 - `avgUploadNumIgnoreUndoOfTypei`：第`i`类题目的平均提交次数，忽略没做的。共8列。
+- `finishRateOfTypei`：每类题目的完成率，共8列。
 
 `user_info.csv`的部分截图。
 
@@ -1096,6 +1097,8 @@ def loss_vae(recon_x,x,mu,logvar,criterion):
 ![image.png](https://i.loli.net/2020/07/24/RFohWudj6PHsQO3.png)
 
 ![image.png](https://i.loli.net/2020/07/24/q3APZ7bSziprEC5.png)
+
+![image.png](https://i.loli.net/2020/07/26/ydTzopEBIa1FuMA.png)
 
 ### 题目视角的分析
 
@@ -1321,15 +1324,85 @@ def copy_detector(path1,path2,threshold=0.6):
 
 #### 深度评估编程能力
 
+如何评价学生的编程能力呢？或者说如何评估学生在这200道编程题目上的表现呢？仅仅依靠学生在这道题目上的得分显然是不够的，我们还要考虑到这道题的平均分、完成情况、平均时间跨度等诸多因素才能给出一个学生在这道题上的具体表现的分数，即不能只考虑到学生的因素，还要考虑题目本身的性质。在`题目视角的分析`模块中，我们已经从题目视角做了非常透彻的分析，其中题目的难度系数综合考虑了题目的完成率、平均分、上传次数、时间跨度、代码运行时间等诸多因素，所以在这里我们直接利用前面分析的结果，即在深度评估学生在某道题目上的表现时，我们选取了学生在这道题目上的得分和这道题目的难度系数，看似只考虑了两个指标，实际上已经把题目的完成率、平均分等许多因素都考虑在内了。代码如下所示，如果这位学生不需要做某道题，则返回-2，需要做而没有做则返回-1，最后返回结果时，还对结果做了正则化，使其处在一个0到100的区间内。
+
+```python
+def getUserAbilityOnCase(userId,caseId):
+    """
+    获取学生在某道题目上的表现,综合各种因素
+    :param userId:
+    :param caseId:
+    :return:
+    finished
+    """
+    if not caseId in getCaseIdsShouldDoByUserId(userId): # 不需要做
+        return -2
+    if not caseId in userFinishCaseIds[userId]: # 需要做而没有做
+        return -1
+    return (getScoreByUserIdAndCaseId(userId,caseId)*(3+difficult_degree(caseId))-44.47508515412085)/(3131.785960466791-44.47508515412085)+1
+```
+
+在给出学生在每道题目上的表现分数后，就可以计算出每个学生在每种类型的题目上的综合表现分数，具体的做法是，计算出在每种类型的题目上的平均表现分数，然后再乘这个学生在这类题目上的完成率，考虑完成率是因为防止有学生只做了少量的自己会的题目而取得高的分数，最后在返回结果时也要对结果进行正则化，使其处于0到100之间。具体实现如下所示。
+
+```python
+def getUserAbilityOnType(userId,typeId):
+    """
+    在某一类型的题目上的综合表现 利用 getUserAbilityOnCase
+    :param userId:
+    :param typeId:
+    :return:
+    finished
+    """
+    s=0
+    for i in set(userFinishCaseIds[userId])&set(getCaseIdsShouldDoByUserId(userId))&set(caseIdsByType[typeId]):
+        s+=getUserAbilityOnCase(userId,i)
+    if s==0:
+        return 0
+    # return s
+    return s/len(set(userFinishCaseIds[userId])&set(getCaseIdsShouldDoByUserId(userId))&set(caseIdsByType[typeId]))*float(user_info[user_info['id']==userId]['finishRateOfType'+str(typeId)])*100/1.3536934220462282
+```
+
+TODO 画图 举几个例子 表现分数条形图  只考虑平均得分的图也顺便画一下
+
+最后，我们把每个学生在8类题目上的平均表现分数作为这个学生的**综合编程能力指数**。
+
+```python
+def getUserAbility(userId):
+    """
+    综合编程能力评估函数 利用 getUserAbilityOnCase
+    :param userId:
+    :return:
+    finished
+    """
+    s=0
+    for i in range(8):
+        s+=getUserAbilityOnType(userId,i)
+    return s/8
+```
+
+TODO 画图 综合编程能力指数分布图
+
+在做完编程能力评估后，我们把每种题目类型的表现分数以及综合编程能力指数追加到`user_info.csv`中，增加了8列，分别为`userAbilityOfType0`、`userAbilityOfType1`、`userAbilityOfType2`、`userAbilityOfType3`、`userAbilityOfType4`、`userAbilityOfType5`、`userAbilityOfType6`、`userAbilityOfType7`、`userAbility`，以便后续分析。
+
+![image.png](https://i.loli.net/2020/07/26/YAX8UInJo6gDdS3.png)
+
 #### 生成编程学习路线 & 自动推荐代码
+
+此部分的分析将基于
 
 #### 编程习惯分析
 
+编程时间习惯、最喜欢做的题目类型（基于每种类型的提交总次数）（词云）、
+
 #### 寻找编程搭档
+
+时间相近、分数相近、综合来看（降维、聚类）
 
 ## 附录也很精彩
 
 此部分主要是一些帮助读者理解的数据可视化成果展示。
+
+### 每道题的分析报告
 
 对于每一道题目，我们都提供了画了三张图，以供读者了解这道题的基本情况。分别是分数分布图，忽略未做学生的平均分、不忽略没做学生的平均分条形图，以及完成率、难度、运行时间等指标的雷达图。
 
@@ -1387,3 +1460,8 @@ for i in random.sample(range(882),5):
 
 ![image.png](https://i.loli.net/2020/07/23/6Dk4WRTs1Z8H9gc.png)
 
+### 个人编程能力分析报告
+
+### 学生编程"大数据"
+
+相关性分析、编程时间分布、最喜欢做的题目类型(用上传次数评估)（词云）
