@@ -77,7 +77,7 @@ GitHub项目地址：https://github.com/SWargrave/data-science
 
 直接下载项目所有文件：http://file.jwargrave.com/data-science
 
-快速预览所有代码：http://file.jwargrave.com/data-science-code （PDF格式）
+快速预览全部代码：http://file.jwargrave.com/data-science-code （PDF格式，由`ipynb`文件转化而来）
 
 ## 研究方法
 
@@ -1362,6 +1362,8 @@ def getUserAbilityOnType(userId,typeId):
     return s/len(set(userFinishCaseIds[userId])&set(getCaseIdsShouldDoByUserId(userId))&set(caseIdsByType[typeId]))*float(user_info[user_info['id']==userId]['finishRateOfType'+str(typeId)])*100/1.3536934220462282
 ```
 
+以下是几个学生的在8种类型的题目上的能力分数分布情况，作为对照和能力评估的多样性，我们还同时画出了两种类型的平均得分（忽略未做和不忽略未做）。
+
 TODO 画图 举几个例子 表现分数条形图  只考虑平均得分的图也顺便画一下
 
 最后，我们把每个学生在8类题目上的平均表现分数作为这个学生的**综合编程能力指数**。
@@ -1380,6 +1382,8 @@ def getUserAbility(userId):
     return s/8
 ```
 
+以下是所有学生的**综合编程能力指数**分布情况。
+
 TODO 画图 综合编程能力指数分布图
 
 在做完编程能力评估后，我们把每种题目类型的表现分数以及综合编程能力指数追加到`user_info.csv`中，增加了8列，分别为`userAbilityOfType0`、`userAbilityOfType1`、`userAbilityOfType2`、`userAbilityOfType3`、`userAbilityOfType4`、`userAbilityOfType5`、`userAbilityOfType6`、`userAbilityOfType7`、`userAbility`，以便后续分析。
@@ -1390,13 +1394,29 @@ TODO 画图 综合编程能力指数分布图
 
 此部分的分析将基于`深度评估编程能力`模块，因为已经对学生在各种类型的题目上的表现有了一个深度的评估，这将为我们为学生制定编程学习路线和推荐代码打下很好的基础。
 
+
+
 #### 编程习惯分析
 
-编程时间习惯、最喜欢做的题目类型（基于每种类型的提交总次数）（词云）、
+此部分将对学生的编程习惯进行分析，将从两个角度对学生的编程习惯进行分析，分别是编程时间分布习惯和最喜欢的题目类型角度。此部分的分析将为后续的`寻找编程搭档`模块打下基础。
+
+1. 编程时间分布分析
+2. 最喜欢的题型分析
+
+
+
+TODO 画图 时间分布，24列的那种 饼图，4块（上午提交次数比例，下午，晚上，深夜）
+
+TODO 画图 每种类型的题目的喜欢程度 8列 每个学生一张图
 
 #### 寻找编程搭档
 
-时间相近、分数相近、综合来看（降维、聚类）
+在寻找编程搭档时，我们将从4个角度出发，第一个角度是寻找编程时间分布与自己最接近的搭档，设想一下，如果你的编程搭档总是不习惯于和你在相近的时间段编程，那就无法一起学习进步了；第二个角度是寻找与自己在各类题目上分数分布最接近的同学，即各方面能力与自己最接近的人；第三个角度是寻找与自己在各类题目上分数分布差异最大的同学，这有利于大家优势互补；第四个角度是"一键寻找"与自己能力最接近的同学，这会综合各种因素，包括平均得分、编程时间等各种因素。
+
+1. "最近编程时间"视角
+2. "最近编程分数分布"视角
+3. "最远编程分数分布"视角
+4. "一键寻找"编程搭档
 
 ## 附录也很精彩
 
@@ -1464,4 +1484,4 @@ for i in random.sample(range(882),5):
 
 ### 学生编程"大数据"
 
-相关性分析、编程时间分布、最喜欢做的题目类型(用上传次数评估)（词云）
+相关性分析、编程时间分布、最喜欢做的题目类型(用上传次数评估)等
