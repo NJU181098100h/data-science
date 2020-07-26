@@ -67,15 +67,26 @@
 详细分析在"研究方法"模块
 
 1. 深度评估编程能力
-2. 生成编程学习路线 & 自动推荐代码
-3. 编程习惯分析
+
+在这一部分，我们会对学生的编程能力有一个全面的、深度的评估，所考虑到的因素远不止平均分，我们还会考虑题目的平均分、上传次数、时间跨度等诸多因素，重新给每个学生在每道题目上的表现赋分，这个"表现分数"比单纯的得分包含更多的信息，也更加客观公正，基于每道题目的"表现分数"，我们会计算出每个学生在每种类型的题目上的"表现分数"，以此来评估学生对每种题型的掌握情况；再在这一基础上，我们对每一个学生给出了**综合编程能力指数**，并用这一指标来反映学生在此次编程作业中的整体表现。
+
+2. 编程习惯分析
+
+在这一部分，我们会从三个角度分析每一个学生的编程习惯，第一个角度是编程时间分布分析，此部分会分析每个学生都喜欢在一天中的什么时刻编程；第二个角度是分析每个学生喜欢的题目类型，我们会定义一个喜欢指数，评估每个学生对于每类题型的喜欢程度；第三个角度是"拖延症"分析，我们充分利用了`test_data.json`中所提供的一切信息，深度分析了学生的"拖延症"的严重程度。此部分的分析建模对后续的`生成编程学习路线 & 自动推荐代码`和`寻找编程搭档`这两个模块有很大的帮助。
+
+3. 生成编程学习路线 & 自动推荐代码
+
+在生成编程学习路径这一部分，我们会根据学生在8种类型的题目上的能力表现，为每种类型的题目指定不同的优先级，告诉学生应该优先做哪种类型的题目，并把8种类型的题目按优先级从高到低排序告知给学生，这个排序后的结果即为生成的编程学习路径。
+
+在自动推荐代码这一部分，我们允许学生指定一种模式，即"心动模式"和"考验模式"中的一个，根据指定的不同的模式，我们会给学生推荐不同的代码；在"心动模式"中，学生能够巩固加强自己所喜欢和擅长的题型，保持优势；在"考验模式"中，学生能够查漏补缺，弥补自己不擅长或不喜欢的部分，走出舒适区。
+
 4. 寻找编程搭档
 
 ## 开源代码地址
 
 GitHub项目地址：https://github.com/SWargrave/data-science
 
-直接下载项目所有文件：http://file.jwargrave.com/data-science
+直接下载项目所有文件及代码：http://file.jwargrave.com/data-science（zip文件）
 
 快速预览全部代码：http://file.jwargrave.com/data-science-code （PDF格式，由`ipynb`文件转化而来）
 
@@ -1390,24 +1401,142 @@ TODO 画图 综合编程能力指数分布图
 
 ![image.png](https://i.loli.net/2020/07/26/YAX8UInJo6gDdS3.png)
 
-#### 生成编程学习路线 & 自动推荐代码
-
-此部分的分析将基于`深度评估编程能力`模块，因为已经对学生在各种类型的题目上的表现有了一个深度的评估，这将为我们为学生制定编程学习路线和推荐代码打下很好的基础。
-
-
-
 #### 编程习惯分析
 
 此部分将对学生的编程习惯进行分析，将从两个角度对学生的编程习惯进行分析，分别是编程时间分布习惯和最喜欢的题目类型角度。此部分的分析将为后续的`寻找编程搭档`模块打下基础。
 
 1. 编程时间分布分析
-2. 最喜欢的题型分析
 
+在之前的`站在学生视角的数据预处理`模块，我们已经统计了每个学生的提交记录的时间分布，细化到每个小时的提交次数，同时也计算出了每个小时的提交次数占总提交次数的比例，利用这些数据可以分析出每个学生倾向于在什么时间段编程，进而反映出他的作息时间，为后续寻找编程搭档提供了有力依据。此外，我们把"上午"定义为5点到12点，"下午"定义为12点到18点，"晚上"定义为18点到24点，"深夜"定义为0点到5点，并求出每个时间段的提交次数及其占总次数的比例，根据比例最高的时间段把学生归类为"上午型"、"下午型"、"晚上型"和"深夜型"。
 
+![image.png](https://i.loli.net/2020/07/26/Oku3SbLXNi6BnPr.png)
+
+以下是几个学生编程时间分布的可视化结果。
 
 TODO 画图 时间分布，24列的那种 饼图，4块（上午提交次数比例，下午，晚上，深夜）
 
+2. 最喜欢的题型分析
+
+我们还计算了每个学生对于每类题目的"喜欢程度"，具体的计算方法如下，主要的考虑因素为提交次数和平均得分，这两个值增大时，相应的"喜欢程度"也会增大，除此以外，该函数还把两者的乘积除以528，使得所有求出来的值处于0到100之间，并做两次"开根号乘十"，这是一种正则化的手段，使得求出来的"喜欢程度"处在一个合理的区间内，并有着较合理的分布。然后把求出来的结果追加到`user_info.csv`中，新增的列为`likeDegreeOfType0`、`likeDegreeOfType1`一直到`likeDegreeOfType7`。
+
+![image.png](https://i.loli.net/2020/07/26/7N4skeDIiz3f1Mr.png)
+
+```python
+def getLikeDegreeByUserAndType(userId,typeId):
+    """
+    返回学生对某类题目的喜欢程度 结合uploadNum avgScore
+    :param userId:
+    :param typeId:
+    :return:
+    finished
+    """
+    import math
+    user_info=pd.read_csv('user_info.csv')
+    return 10*math.sqrt(10*math.sqrt(float(user_info[user_info['id']==userId]['uploadSumOfType'+str(typeId)])*float(user_info[user_info['id']==userId]['avgScoreOfType'+str(typeId)])/528))
+```
+
+下面为几个学生的编程题型"喜欢程度"可视化结果。
+
 TODO 画图 每种类型的题目的喜欢程度 8列 每个学生一张图
+
+3. "拖延症"分析
+
+在这部分，我们计算了每个学生在每道题目的首次提交和最后一次提交的时间差，即学生第一次尝试去做某道题和最后一次提交完成这道题目的时间差，这个时间差可以客观的反映同学在遇到难题时的"坚持程度"，是坚持不断地尝试求解呢？还是拖到最后才做呢？所以我们基于`user_info.csv`的`avgTimeSpan`字段来分析每个学生的拖延症指数。具体实现如下所示，为了获得较好的可视化结果，以及为了让拖延症指数的分布不至于太过密集，我们在计算拖延症指数时，尝试了多种不同的计算方法和正则化策略，最终得出的解决方案即为下述代码。
+
+```python
+def delay_degree_of_user(userId):
+    user_info=pd.read_csv('user_info.csv')
+    import math
+    return 10*math.sqrt(10*math.sqrt(float(user_info[user_info['id']==userId]['avgTimeSpan'])/57.010083756345175))
+```
+
+计算完每个学生的拖延症指数后，我们会把这一结果追加到`user_info.csv`，新增一列`delayDegree`。
+
+![image.png](https://i.loli.net/2020/07/26/GMwelNjEUQsJOzH.png)
+
+TODO 画图 拖延症指数分布图
+
+#### 生成编程学习路线 & 自动推荐代码
+
+此部分的分析将基于`深度评估编程能力`模块和`编程习惯分析`模块，因为已经对学生在各种类型的题目上的表现有了一个深度的评估，并且也知道了学生所喜欢的题目类型，这将为我们为学生制定编程学习路线和推荐代码打下很好的基础。
+
+1. 生成编程学习路线
+
+那既然是学习路线，我们就应该针对学生的薄弱环节下手，在此前的`深度评估编程能力`模块，我们已经对学生在各种题型上的能力有了一个客观准确的评估，在这里我们就基于这个能力指数来为学生推荐学习路线，具体实现为，我们把学生在8种类型的题目上的能力得分进行排序，由低到高返回相应的题目的类型编号，学生可以按照返回的结果按优先级从高到低强化编程练习。
+
+```python
+def getCodeRoadForUser(userId):
+    user_info=pd.read_csv('user_info.csv')
+    abilities=[]
+    for i in range(8):
+        abilities.append(float(user_info[user_info['id']==userId]['userAbilityOfType'+str(i)]))
+    abilities=np.array(abilities)
+    return list(np.argsort(abilities))
+```
+
+下面是几个学生的推荐的编程学习路线示例。
+
+![image.png](https://i.loli.net/2020/07/26/nNoMw4DgasuYt6z.png)
+
+![image.png](https://i.loli.net/2020/07/26/fEazdK5DcIkbY2l.png)
+
+![image.png](https://i.loli.net/2020/07/26/zp5aAlGYdhNkXuV.png)
+
+2. 自动推荐代码
+
+自动推荐代码模块将从两个角度给学生推荐代码，或者说有两种模式供学生选择，分别是"心动模式"和"考验模式"。
+
+- "心动模式"
+
+"心动模式"，即给学生优先推荐他所喜欢或擅长的题型的题目，且学生越喜欢或越擅长，返回时优先级越高，可以帮助同学巩固自己擅长的领域。具体实现如下所示，首先获取学生最喜欢的前四个题目类型和最擅长的题目类型，组成列表`typeIds`，为了体现优先级，喜欢程度和擅长程度越高的，会被更多次的加入以体现优先级，然后从`typeIds`中随机取出一个值作为题目类型，再从该类型的所有题目中取出一道题，重复25次，将取出的题目的编号返回，即可达到推荐的代码。
+
+```python
+def getRecommendCaseIdsUserLike(userId):
+    user_info=pd.read_csv('user_info.csv')
+    typeIds=[]
+    typeIds1=list(np.argsort(-np.array([float(user_info[user_info['id']==userId]['userAbilityOfType'+str(i)]) for i in range(8)]))[:4])
+    typeIds2=list(np.argsort(np.array([float(user_info[user_info['id']==userId]['likeDegreeOfType'+str(i)]) for i in range(8)]))[:4])
+    for i in range(4):
+        for j in range(i+1):
+            typeIds.append(typeIds1[i])
+            typeIds.append(typeIds2[i])
+    recommendCaseIds=set()
+    for i in range(25):
+        recommendCaseIds.add(random.choice(caseIdsByType[random.choice(typeIds)]))
+    return list(recommendCaseIds)
+```
+
+以下是为两个学生在"心动模式"下推荐代码的示例。
+
+![image.png](https://i.loli.net/2020/07/27/2kSBbYe1dUKxhQj.png)
+
+![image.png](https://i.loli.net/2020/07/27/SL3kBjeGTaXKlQc.png)
+
+- "考验模式"
+
+"考验模式"，即给学生优先推荐他所不擅长或不喜欢的题目类型的题目，且学生越不喜欢或越不擅长，返回的优先级越高，具体实现的基本思想和方法与"心动模式"类似。
+
+```python
+def getRecommendCaseIdsUserDislike(userId):
+    user_info=pd.read_csv('user_info.csv')
+    typeIds=[]
+    typeIds1=np.argsort(np.array([float(user_info[user_info['id']==userId]['userAbilityOfType'+str(i)]) for i in range(8)]))[:4]
+    typeIds2=np.argsort(-np.array([float(user_info[user_info['id']==userId]['likeDegreeOfType'+str(i)]) for i in range(8)]))[:4]
+    for i in range(4):
+        for j in range(i+1):
+            typeIds.append(typeIds1[i])
+            typeIds.append(typeIds2[i])
+    recommendCaseIds=set()
+    for i in range(25):
+        recommendCaseIds.add(random.choice(caseIdsByType[random.choice(typeIds)]))
+    return list(recommendCaseIds)
+```
+
+以下是为两个学生在"考验模式"下推荐代码的示例。
+
+![image.png](https://i.loli.net/2020/07/27/FsJCgnlXVZOm7zA.png)
+
+![image.png](https://i.loli.net/2020/07/27/rUmwDi5p8yqIdOM.png)
 
 #### 寻找编程搭档
 
