@@ -34,7 +34,7 @@
 
 ## 关键词
 
-`scikit-learn` `PyTorch` `NumPy` `Pandas` `matplotlib` `数据清洗` `特征工程` `数据可视化` `机器学习` `深度学习` `主成分分析` `深度自编码器` `变分自编码器` `K-means聚类分析` `相关性分析` `KL散度` `JS散度` 
+`scikit-learn` `PyTorch` `NumPy` `Pandas` `matplotlib` `seaborn` `Streamlit` `数据清洗` `特征工程` `数据可视化` `机器学习` `深度学习` `主成分分析` `深度自编码器` `变分自编码器` `K-means聚类分析` `相关性分析` `KL散度` `JS散度` 
 
 ## 研究问题
 
@@ -81,6 +81,8 @@
 在自动推荐代码这一部分，我们允许学生指定一种模式，即"心动模式"和"考验模式"中的一个，根据指定的不同的模式，我们会给学生推荐不同的代码；在"心动模式"中，学生能够巩固加强自己所喜欢和擅长的题型，保持优势；在"考验模式"中，学生能够查漏补缺，弥补自己不擅长或不喜欢的部分，走出舒适区。
 
 4. 寻找编程搭档
+
+在寻找编程搭档模块，我们会从四个角度为学生推荐最佳编程搭档，分别是"最近编程时间分布"视角、"最近编程分数分布"视角、"最远编程分数分布"视角和"一键寻找"编程搭档视角，每个角度都可以满足学生不同的需求，比如"最远编程分数分布"视角会帮同学找到和自己有不同擅长题型的搭档，有利于大家优势互补，"一键寻找"编程搭档则是综合考虑各种因素，全面地为学生找到最佳编程搭档。
 
 ## 开源代码地址
 
@@ -1621,7 +1623,94 @@ def getPartnersByScoreFar(userId):
 
 4. "一键寻找"编程搭档
 
-在"一键寻找"编程
+在"一键寻找"编程搭档模块，我们会综合考虑`user_info.csv`中包含的所有信息，运用降维、聚类等手段为学生找出最佳的编程搭档。在降维之前，我们会手动删去`user_info.csv`中的一些冗余特征，比如说，每个时间段的提交次数和提交次数占总次数的比例显然冗余，我们在降维之前会手动剔除一些冗余的维度来达到降维的目的，在做完手动挑选特征后，还要对各列特征进行归一化，使其对最后的影响程度相近。"手动降维"和特征归一化之后，我们会用主成分分析将数据降至2维，然后再对数据进行聚类，降到2维的目的是为了从这么多维度的数据中提取"主成分"和方便后续可视化，在这里我们只采用了PCA进行降维，而没有像题目模块那样采用深度自编码器和变分自编码器，是因为在这一问题上，我们通过实践发现，PCA和自编码器的效果差异不是很大，而且PCA所消耗的时间要远少于自编码器。
+
+首先进行手动特征选择，依据生活经验剔除冗余的特征，并且进行特征归一化。特征选择后学生相关数据由126维降到了94维。然后将特征选择之后、主成分分析之前的保存到`user_before_pca.csv`，以下是具体实现和`user_before_pca.csv`的部分截图。	
+
+```python
+user_before_pca=pd.read_csv('user_info.csv')
+user_before_pca['uploadSum']=StandardScaler().fit_transform(np.array(user_before_pca['uploadSum']).reshape(-1,1))
+columns_to_drop=[str(i)+'to'+str(i+1) for i in range(24)]
+columns_to_drop.append('timeType')
+columns_to_drop.append('dayRate')
+columns_to_drop.append('afternoonRate')
+columns_to_drop.append('nightRate')
+columns_to_drop.append('deepRate')
+user_before_pca['caseNumFinish']=StandardScaler().fit_transform(np.array(user_before_pca['caseNumFinish']).reshape(-1,1))
+columns_to_drop.append('avgUploadNum')
+columns_to_drop.append('avgScore')
+columns_to_drop.append('avgScoreIgnoreUndo')
+user_before_pca['avgTimeSpan']=StandardScaler().fit_transform(np.array(user_before_pca['avgTimeSpan']).reshape(-1,1))
+for i in range(8):
+    user_before_pca['likeDegreeOfType'+str(i)]=StandardScaler().fit_transform(np.array(user_before_pca['likeDegreeOfType'+str(i)]).reshape(-1,1))
+    user_before_pca['userAbilityOfType'+str(i)]=StandardScaler().fit_transform(np.array(user_before_pca['userAbilityOfType'+str(i)]).reshape(-1,1))
+    user_before_pca['uploadSumOfType'+str(i)]=StandardScaler().fit_transform(np.array(user_before_pca['uploadSumOfType'+str(i)]).reshape(-1,1))
+    user_before_pca['avgUploadNumOfType'+str(i)]=StandardScaler().fit_transform(np.array(user_before_pca['avgUploadNumOfType'+str(i)]).reshape(-1,1))
+    user_before_pca['avgUploadNumIgnoreUndoOfType'+str(i)]=StandardScaler().fit_transform(np.array(user_before_pca['avgUploadNumIgnoreUndoOfType'+str(i)]).reshape(-1,1))
+    user_before_pca['avgScoreOfType'+str(i)]=StandardScaler().fit_transform(np.array(user_before_pca['avgScoreOfType'+str(i)]).reshape(-1,1))
+    user_before_pca['avgScoreIgnoreUndoOfType'+str(i)]=StandardScaler().fit_transform(np.array(user_before_pca['avgScoreIgnoreUndoOfType'+str(i)]).reshape(-1,1))
+user_before_pca['userAbility']=StandardScaler().fit_transform(np.array(user_before_pca['userAbility']).reshape(-1,1))
+user_before_pca['delayDegree']=StandardScaler().fit_transform(np.array(user_before_pca['delayDegree']).reshape(-1,1))
+user_before_pca=user_before_pca.drop(columns=columns_to_drop)
+user_before_pca.to_csv('user_before_pca.csv',index=None)
+```
+
+![image.png](https://i.loli.net/2020/07/27/kONbJjTvu75Yot2.png)
+
+![image.png](https://i.loli.net/2020/07/27/2g9pPa6JGTyFhvE.png)
+
+特征选择与归一化后，我们就对`user_before_pca.cav`用主成分分析方法进行降维，具体的实现方法与题目部分的降维类似，并将降维后得到的结果保存到`user_pca_2_dim.csv`，降维后并再重构回去，与原数据计算均方误差，得到的误差为`0.19819011538157985`。具体实现及`user_pca_2_dim.csv`的部分截图如下所示。
+
+```python
+user_before_pca=pd.read_csv('user_before_pca.csv')
+user_before_pca_array=user_before_pca.iloc[:,1:].values
+user_pca_model=PCA(n_components=2).fit(user_before_pca_array)
+user_pca_2_dim=user_pca_model.transform(user_before_pca_array)
+with open('user_pca_2_dim.csv',mode='w',newline='') as file:
+    cw=csv.writer(file)
+    cw.writerow(['id','dim0','dim1'])
+    for i in range(254):
+        cw.writerow([validUserIds[i],user_pca_2_dim[i,0],user_pca_2_dim[i,1]])
+user_reconstructed=user_pca_model.inverse_transform(user_pca_2_dim)
+user_pca_loss=np.mean(np.square(user_reconstructed-user_before_pca_array))
+print('PCA loss:'+str(user_pca_loss))
+```
+
+![image.png](https://i.loli.net/2020/07/27/CVZRT1XGvA9EPjh.png)
+
+![image.png](https://i.loli.net/2020/07/27/oewbLMJVmUPIu3N.png)
+
+降维之后，我们会对降维后的用户特征进行聚类分析，从而可以从综合、全面的角度寻找最适合成为编程搭档的同学，我们把254个有效学生数据分成了10类，具体实现如下所示，然后在二维平面把聚类的结果可视化。
+
+```python
+user_pca_2_dim=pd.read_csv('user_pca_2_dim.csv')
+user_kmeans=KMeans(n_clusters=10,max_iter=2000).fit(user_pca_2_dim.iloc[:,1:].values)
+```
+
+![download.png](https://i.loli.net/2020/07/27/gwim3Ws2XzFr1DT.png)
+
+在降维与聚类之后，我们就可以衡量两个学生之间的综合编程能力的差异，从而给每个学生推荐和他能力相近的同学做为编程搭档。两个学生之间的"距离差"定义为降维后的均方误差，其值越大，相似度越小，所以在计算相似度时只需取相反数即可。具体实现如下所示。
+
+```python
+def getCodeAbilitySimilarityOfTwoUser(userId1,userId2):
+    """
+    综合各种因素,返回两个学生编程能力的相似度 用于"一键寻找"最佳编程搭档 需要降维、聚类
+    :param userId1:
+    :param userId2:
+    :return:
+    """
+    user_pca_2_dim=pd.read_csv('user_pca_2_dim.csv')
+    return -np.sqrt(np.mean(np.square(user_pca_2_dim[user_pca_2_dim['id']==userId1].iloc[:,1:].values-user_pca_2_dim[user_pca_2_dim['id']==userId2].iloc[:,1:].values)))
+def getPartnersByAbility(userId):
+    abilitySimilaritys=list(np.argsort(np.array([-getCodeAbilitySimilarityOfTwoUser(userId,i) for i in validUserIds])))
+    return [validUserIds[i] for i in abilitySimilaritys]
+```
+
+以下是一个计算两个同学编程能力相似度和为一个学生从"一键寻找"编程搭档的视角寻找编程搭档的示例。
+
+![image.png](https://i.loli.net/2020/07/27/hNl83xIc7pbH9CX.png)
+
+![image.png](https://i.loli.net/2020/07/27/I8USxd2sYKblDo1.png)
 
 ## 附录也很精彩
 
