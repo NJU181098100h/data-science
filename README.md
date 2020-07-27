@@ -34,7 +34,7 @@
 
 ## 关键词
 
-`scikit-learn` `PyTorch` `NumPy` `Pandas` `matplotlib` `数据清洗` `特征工程` `数据可视化` `机器学习` `深度学习` `主成分分析` `深度自编码器` `变分自编码器` `K-means聚类分析` `相关性分析` 
+`scikit-learn` `PyTorch` `NumPy` `Pandas` `matplotlib` `数据清洗` `特征工程` `数据可视化` `机器学习` `深度学习` `主成分分析` `深度自编码器` `变分自编码器` `K-means聚类分析` `相关性分析` `KL散度` `JS散度` 
 
 ## 研究问题
 
@@ -1547,9 +1547,81 @@ def getRecommendCaseIdsUserDislike(userId):
 在寻找编程搭档时，我们将从4个角度出发，第一个角度是寻找编程时间分布与自己最接近的搭档，设想一下，如果你的编程搭档总是不习惯于和你在相近的时间段编程，那就无法一起学习进步了；第二个角度是寻找与自己在各类题目上分数分布最接近的同学，即各方面能力与自己最接近的人；第三个角度是寻找与自己在各类题目上分数分布差异最大的同学，这有利于大家优势互补；第四个角度是"一键寻找"与自己能力最接近的同学，这会综合各种因素，包括平均得分、编程时间等各种因素。
 
 1. "最近编程时间分布"视角
+
+在此部分，我们基于编程时间分布来为学生寻找编程搭档，此前已经求出了每个学生的提交记录在24个小时的分布，我们将比较学生和学生之间的提交记录时间分布差异来决定契合度，具体评估时间分布的差异我们采用的是`JS散度`，其值越大，说明分布差异越大，那要计算相似度的话，只需要用1减去`JS散度`，然后我们可以基于编程时间分布的相似度来为学生寻找编程搭档，其中`getPartnersByTime`会按相似度从高到低排序返回所有有效学生的编号。
+
+```python
+def getCodeTimeSimilarityOfTwoUser(userId1,userId2):
+    """
+    返回两个学生的编程时间分布的相似度 值越大,越相似 用于寻找编程搭档(寻找编程时间和自己最贴近的同学)的一个角度
+    :param userId1:
+    :param userId2:
+    :return:
+    finished
+    """
+    def kl_divergence(p,q):
+        return np.sum(p*np.log(p/q))
+    def js_divergence(p,q):
+        return (kl_divergence(p,(p+q)/2)+kl_divergence(q,(p+q)/2))/2
+    user_info=pd.read_csv('user_info.csv')
+    timeRates1=np.array([float(user_info[user_info['id']==userId1][str(i)+'to'+str(i+1)+'rate']) for i in range(24)])
+    timeRates2=np.array([float(user_info[user_info['id']==userId2][str(i)+'to'+str(i+1)+'rate']) for i in range(24)])
+    return 1-js_divergence(timeRates1+0.01,timeRates2+0.01)
+def getPartnersByTime(userId):
+    timeSimilaritys=list(np.argsort(np.array([-getCodeTimeSimilarityOfTwoUser(userId,i) for i in validUserIds])))
+    return [validUserIds[i] for i in timeSimilaritys]
+```
+
+以下是一些计算时间分布相似度和寻找"最近编程实践分布"的编程搭档的示例。
+
+![image.png](https://i.loli.net/2020/07/27/6PwfadIumlKYhQ2.png)
+
+![image.png](https://i.loli.net/2020/07/27/ESia3pDRGoQTmNj.png)
+
 2. "最近编程分数分布"视角
+
+"最近编程分数分布"角度用于寻找编程能力和自己最相似的编程搭档，评估编程能力差异的方法是计算两个学生在8类题目上的得分的均方误差，均方误差越大，相似度越小，具体实现如下所示。
+
+```python
+def getCodeScoreSimilarityOfTwoUser(userId1,userId2):
+    """
+    返回两个学生在8种类型的题目上的得分的相似度 相似度越高,越相似 用于寻找编程搭档的一个角度
+    :param userId1:t
+    :param userId2:
+    :return:
+    finished
+    """
+    user_info=pd.read_csv('user_info.csv')
+    scores1=np.array([float(user_info[user_info['id']==userId1]['avgScoreIgnoreUndoOfType'+str(i)]) for i in range(8)])
+    scores2=np.array([float(user_info[user_info['id']==userId2]['avgScoreIgnoreUndoOfType'+str(i)]) for i in range(8)])
+    return 100-np.sqrt(np.mean(np.square(scores1-scores2)))
+def getPartnersByScoreClose(userId):
+    scoreSimilaritys=list(np.argsort(np.array([-getCodeScoreSimilarityOfTwoUser(userId,i) for i in validUserIds])))
+    return [validUserIds[i] for i in scoreSimilaritys]
+```
+
+下面是一些计算编程分数分布相似度和寻找"最近编程分数分布"编程搭档的示例。
+
+![image.png](https://i.loli.net/2020/07/27/MB9TLv1uJojgwtk.png)
+
+![image.png](https://i.loli.net/2020/07/27/d7a3UXCx8BkORSw.png)
+
 3. "最远编程分数分布"视角
+
+"最远编程分数分布"恰好与"最近编程分数分布"的结果相反，其目的是找到和自己能力差异较大的同学，从而达到优势互补的目的，其实现方法与"最近编程分数分布"类似。
+
+```python
+def getPartnersByScoreFar(userId):
+    return getPartnersByScoreClose(userId)[::-1]
+```
+
+下面是一个寻找"最远编程分数分布"的编程搭档的示例。
+
+![image.png](https://i.loli.net/2020/07/27/HkpatPch5KEzq8o.png)
+
 4. "一键寻找"编程搭档
+
+在"一键寻找"编程
 
 ## 附录也很精彩
 
