@@ -12,19 +12,27 @@
 
 ## 先睹为快
 
-http://www.jwargrave.com:8501 ，这是我们本次数据分析项目的成果展示网站，由于时间紧迫的原因，我们目前只把部分功能部署在了这个网站上，这个网站的定位是面向不懂编程的老师、学生，让他们能够快速、方便地利用我们的项目成果来为实际的教学、学习带来效果，让懂编程的老师、学生不用面对枯燥的代码，也不用运行我们的代码就可以快速获得教学、学习的建议。目前我们只把学生模块的一些功能部署上去了，具体是，学生可以利用我们的网站来`获取学习路线和推荐的题目`、`查看个人编程能力分析报告`、`在线寻找编程搭档`。你也可以在本地运行起这个网站，只需运行`personalreport`目录下的`personalReport.py`文件，不是直接运行python文件，而是在命令行输入`streamlit run personalReport.py`，然后打开浏览器访问`http://localhost:8501`。以下为网站的一些截图。
+http://www.jwargrave.com:8501 ，这是我们本次数据分析项目的成果展示网站，由于时间紧迫的原因，我们目前只把部分功能部署在了这个网站上，这个网站的定位是面向不懂编程的老师、学生，让他们能够快速、方便地利用我们的项目成果来为实际的教学、学习带来效果，让懂编程的老师、学生不用面对枯燥的代码，也不用运行我们的代码就可以快速获得教学、学习的建议。目前我们只把学生模块的一些功能部署上去了，具体是，学生可以利用我们的网站来`获取学习路线和推荐的题目`、`查看个人编程能力分析报告`、`在线寻找编程搭档`。你也可以在本地运行起这个网站，只需运行`personalreport`目录下的`personalReport.py`文件，不是直接运行python文件，而是在命令行输入`streamlit run personalReport.py`，然后打开浏览器访问`http://localhost:8501`。以下为网站的一些截图。此部分只是简单介绍一下项目网站，详细说明在`附录也精彩`的`个人编程能力分析报告`模块。
 
 **在体验此网站前务必阅读此报告的`附录也很精彩`下的`个人编程能力分析报告`模块，否则会出现很多问题。**
 
-**推荐在本地电脑上自己运行`streamlit run personalReport.py`，部署在服务器上可能会产生中文乱码和图片尺寸失调的问题，我感觉怪怪的。**
+**推荐在本地电脑上自己运行`streamlit run personalReport.py`，部署在服务器上的可能会产生中文乱码和图片尺寸失调的问题，我感觉怪怪的。**
+
+![0E_NJ_4_GLB77_VUF`9W5JR.png](https://i.loli.net/2020/07/28/8RwcZ16AOoGgSaW.png)
 
 ![image.png](https://i.loli.net/2020/07/28/VmltXyZk2JWPoSY.png)
 
-![screencapture-jwargrave-8501-2020-07-28-01_01_39.png](https://i.loli.net/2020/07/28/wqvbuxl5FH1e249.png)
+![screencapture-localhost-8501-2020-07-28-18_47_27.png](https://i.loli.net/2020/07/28/8YahUkmS6u1QBCW.png)
 
-![screencapture-jwargrave-8501-2020-07-28-01_00_02.png](https://i.loli.net/2020/07/28/Q8f4q9ipgK7Bltm.png)
+![screencapture-localhost-8501-2020-07-28-18_46_38.png](https://i.loli.net/2020/07/28/C85QHgv2StlPxb6.png)
 
-![screencapture-jwargrave-8501-2020-07-28-01_03_31.png](https://i.loli.net/2020/07/28/eXRGKFv8CWrYpbS.png)
+![screencapture-localhost-8501-2020-07-28-18_47_01.png](https://i.loli.net/2020/07/28/dFxVYLpyNuiaewU.png)
+
+点击图片右上角可以查看大图。
+
+![IMG_20200728_185155.jpg](https://i.loli.net/2020/07/28/r19IWNCJpnaDcXu.jpg)
+
+![0DE_C2U1R__M9RNLEZU_5QA.png](https://i.loli.net/2020/07/28/OFJNS9KgoR2AzMc.png)
 
 ## 前言
 
@@ -1399,7 +1407,17 @@ def getUserAbilityOnType(userId,typeId):
 
 以下是几个学生的在8种类型的题目上的能力分数分布情况，作为对照和能力评估的多样性，我们还同时画出了两种类型的平均得分（忽略未做和不忽略未做）。
 
-TODO 画图 举几个例子 表现分数条形图  只考虑平均得分的图也顺便画一下
+编号为88的学生。
+
+![78a5901cd05e13cc9f7439ea5c083e105fba0c24ab17d0e69d386213.png](https://i.loli.net/2020/07/28/hxeLfsGbcgnR5MS.png)
+
+![a14aff974a972461c9502c8b0d7044789ead4878d2b2f768051cbd81.png](https://i.loli.net/2020/07/28/UlDMfy45YuWNS39.png)
+
+编号为13的同学。
+
+![f3275ea5a4fa97608aa4ff15761bc1712b2c9c442a0e8075867722b7.png](https://i.loli.net/2020/07/28/HR7uOarjXwq3BD2.png)
+
+![10a4e21950fa0c6cb9984a8a0385e746e8f54eba4f76512bec17ed58.png](https://i.loli.net/2020/07/28/47wHeDauMgZTCGd.png)
 
 最后，我们把每个学生在8类题目上的平均表现分数作为这个学生的**综合编程能力指数**。
 
@@ -1419,7 +1437,7 @@ def getUserAbility(userId):
 
 以下是所有学生的**综合编程能力指数**分布情况。
 
-TODO 画图 综合编程能力指数分布图
+![abilityhist.jpg](https://i.loli.net/2020/07/28/PvqagLRY5ASBds1.jpg)
 
 在做完编程能力评估后，我们把每种题目类型的表现分数以及综合编程能力指数追加到`user_info.csv`中，增加了8列，分别为`userAbilityOfType0`、`userAbilityOfType1`、`userAbilityOfType2`、`userAbilityOfType3`、`userAbilityOfType4`、`userAbilityOfType5`、`userAbilityOfType6`、`userAbilityOfType7`、`userAbility`，以便后续分析。
 
@@ -1437,7 +1455,17 @@ TODO 画图 综合编程能力指数分布图
 
 以下是几个学生编程时间分布的可视化结果。
 
-TODO 画图 时间分布，24列的那种 饼图，4块（上午提交次数比例，下午，晚上，深夜）
+编号为207的同学的编程时间分布图。
+
+![4d9c27e93dc91668f51a95da00ef2e9e7bdaea2d5c11359a6b964b9b.png](https://i.loli.net/2020/07/28/joPl6yL12h5T9ru.png)
+
+![2a3a88d701ab7e76e5a61e3006a3b701d8697b24143ccb7e1f840b48.png](https://i.loli.net/2020/07/28/wJ3a2MTsul68Sej.png)
+
+编号为147的同学的编程时间分布图。
+
+![524e96dbb477ec7b8654b92356f71fde35edae607c31a8508dbcc663.png](https://i.loli.net/2020/07/28/7OSxNh98fqGpBtD.png)
+
+![d3d869ef8569c4b2e55817c0117a2296f2fb880e4548e00856190991.png](https://i.loli.net/2020/07/28/EvlTkGgndYusCKU.png)
 
 2. 最喜欢的题型分析
 
@@ -1461,7 +1489,13 @@ def getLikeDegreeByUserAndType(userId,typeId):
 
 下面为几个学生的编程题型"喜欢程度"可视化结果。
 
-TODO 画图 每种类型的题目的喜欢程度 8列 每个学生一张图
+编号为200的同学的题目类型喜欢程度分布图。
+
+![3c2b9da1d40dc0bd942bc3d49e1a69d340054aa61a41f1c078ac9545.png](https://i.loli.net/2020/07/28/1motDV9c2fidpZ5.png)
+
+编号为158的同学的题目类型喜欢程度分布图。
+
+![cdbd34668390a414dbe8d2d3c71f496ac3d18b8b2f7415b6fc550413.png](https://i.loli.net/2020/07/28/xaZ7S5eKYDJykXW.png)
 
 3. "拖延症"分析
 
@@ -1478,7 +1512,9 @@ def delay_degree_of_user(userId):
 
 ![image.png](https://i.loli.net/2020/07/26/GMwelNjEUQsJOzH.png)
 
-TODO 画图 拖延症指数分布图
+以下为所有学生的"拖延症指数"分布图。
+
+![delayhist.jpg](https://i.loli.net/2020/07/28/txUsyiJA3OMm8hn.jpg)
 
 #### 生成编程学习路线 & 自动推荐代码
 
@@ -1794,6 +1830,53 @@ for i in random.sample(range(882),5):
 
 ### 个人编程能力分析报告
 
+为了让学生能够更好、更及时的了解自己的学习情况，进而改善学习方法，我们特地为学生开发了一个专属的网站来查看自己的`个人编程能力分析报告`，网址为 http://www.jwargrave.com:8501 ，下面将详细说明该网站的使用方法和功能要点。此部分的代码在`personalreport`文件夹下的`personalReport.py`，运行方法为命令行输入：
+
+```bash
+streamlit run personalReport.py
+```
+
+然后打开浏览器访问 http://localhost:8501 ，如还未安装`streamlit`，可通过`pip`安装：
+
+```bash
+pip install streamlit
+```
+
+点击网页左上角的黑色角标，即可看到此网站为每个学生提供的三个功能，分别是`查看报告`、`获取学习路线&推荐题目`、`寻找编程搭档`。**需要说明的是，由于我们对学生的原来的过于离散的编号重新进行了编号，新的编号为0~270的整数，且不包括`0,1,7,12,14,15,17,28,34,53,56,139,159,172,228,254,259`，这17个学生由于做题数量过少而被标记为了无效用户，所以`输入学生id`只能填写0到270中不在上述17个数字中的整数。**
+
+![0E_NJ_4_GLB77_VUF`9W5JR.png](https://i.loli.net/2020/07/28/8RwcZ16AOoGgSaW.png)
+
+![image.png](https://i.loli.net/2020/07/28/VmltXyZk2JWPoSY.png)
+
+下面会以实例详细说明三大功能。
+
+首先是`寻找编程搭档`功能，学生可以从四个不同的视角出发寻找编程搭档，不同的视角会使用不同的函数来计算学生与学生之间的匹配度，然后网站会给出匹配度排名前十的学生的编号。
+
+![screencapture-localhost-8501-2020-07-28-20_06_10.png](https://i.loli.net/2020/07/28/Rlf8r9ILw6qy5mu.png)
+
+接下来是`获取学习路线&推荐代码`功能，`获取学习路线`会综合考虑学生在每一种类型的题目上的表现，以及题目本身的平均分、难度、完成率等属性，给出一个推荐的学习路线。
+
+![7790RXW_`L6EOKGBW_P94_6.png](https://i.loli.net/2020/07/28/9wcNykRsqeHQAxo.png)
+
+`推荐题目`部分会向学生推荐一些题目，学生可以选择`行动模式`或`考验模式`，两种模式会从不同的视角给学生推荐约20到25道的题目的编号。
+
+![VN48___4HAZ763ZXT_HFOZX.png](https://i.loli.net/2020/07/28/nCHTDa4JIXmMroY.png)
+
+最后一个功能是`生成个人编程能力报告`，在这部分我们会让学生对自己的编程的各个方面的信息都有所了解。
+
+在`编程时间分布分析`中，学生可以滑动选择条来选择一个特定的时间段，然后可以查看在这一时间段的提交次数占总次数的比例。
+
+![@ZPYV_EI_BR3_~S0YAS__0S.png](https://i.loli.net/2020/07/28/kBRc8EYgxbJdUyl.png)
+
+用条形图直观地显示一天中各个时间段的提交次数，共24列，表示一天中的24个小时。
+
+![524e96dbb477ec7b8654b92356f71fde35edae607c31a8508dbcc663.png](https://i.loli.net/2020/07/28/7OSxNh98fqGpBtD.png)
+
+也可以查看自己在`上午`、`下午`、`晚上`、`深夜`的提交次数占总次数的比例，总而可以根据占比最多的时间段来判断这个学生的编程时间习惯（`上午型`、`下午型`、`晚上型`、`深夜型`）。
+
+
+
 ### 学生编程"大数据"
 
 相关性分析、编程时间分布、最喜欢做的题目类型(用上传次数评估)等
+
