@@ -16,6 +16,8 @@ http://www.jwargrave.com:8501 ，这是我们本次数据分析项目的成果�
 
 **在体验此网站前务必阅读此报告的`附录也很精彩`下的`个人编程能力分析报告`模块，否则会出现很多问题。**
 
+**推荐在本地电脑上自己运行`streamlit run personalReport.py`，部署在服务器上可能会产生中文乱码和图片尺寸失调的问题，我感觉怪怪的。**
+
 ![image.png](https://i.loli.net/2020/07/28/VmltXyZk2JWPoSY.png)
 
 ![screencapture-jwargrave-8501-2020-07-28-01_01_39.png](https://i.loli.net/2020/07/28/wqvbuxl5FH1e249.png)
