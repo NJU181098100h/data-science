@@ -118,6 +118,8 @@ GitHub项目地址：https://github.com/SWargrave/data-science
 
 快速预览全部代码：http://file.jwargrave.com/data-science-code （PDF格式，由`ipynb`文件转化而来）
 
+研究报告：http://file.jwargrave.com/data-science-report （PDF格式）
+
 ## 研究方法
 
 ### 开发环境
@@ -1872,11 +1874,62 @@ pip install streamlit
 
 ![524e96dbb477ec7b8654b92356f71fde35edae607c31a8508dbcc663.png](https://i.loli.net/2020/07/28/7OSxNh98fqGpBtD.png)
 
-也可以查看自己在`上午`、`下午`、`晚上`、`深夜`的提交次数占总次数的比例，总而可以根据占比最多的时间段来判断这个学生的编程时间习惯（`上午型`、`下午型`、`晚上型`、`深夜型`）。
+也可以查看自己在`上午`、`下午`、`晚上`、`深夜`的提交次数占总次数的比例，从而可以根据占比最多的时间段来判断这个学生的编程时间习惯（`上午型`、`下午型`、`晚上型`、`深夜型`）。
 
+![X2CXFR1@3Q9@_U_4S_O8PDJ.png](https://i.loli.net/2020/07/28/VPsAFrYxa8EwU9i.png)
 
+学生还可以查看自己的`拖延症指数`，数字越大，说明这个学生的拖延症越严重。
 
-### 学生编程"大数据"
+![B338_X`Q9_HOSJMGUPBZHJD.png](https://i.loli.net/2020/07/28/obndGPWe3NDOCVj.png)
 
-相关性分析、编程时间分布、最喜欢做的题目类型(用上传次数评估)等
+接下来是学生对各种类型的题目的喜好程度的分析，"喜欢程度"越大，说明越喜欢这类型的题目，越小则越讨厌。
 
+![SB4@AZ1RTB3G73L~78_7_GF.png](https://i.loli.net/2020/07/28/olBHs4q12AXEjPi.png)
+
+最后从多个角度对学生的编程能力进行分析，分别从每种类型的题目的完成率、忽略没做的题目的平均分、不忽略没做的题目的平均分、综合编程能力指数分布的角度来进行分析，具体的可视化结果如下所示。
+
+![0U7_6Y7I_TLKZ__GFYJU8_4.png](https://i.loli.net/2020/07/28/kGmsdhfZYapXtSN.png)
+
+![_Q`EDQIYBO672__M_@Q@8_I.png](https://i.loli.net/2020/07/28/Ju9O6GQ2HF7o81T.png)
+
+![B_S_@J_CCX@3AQ_L1TP8I_3.png](https://i.loli.net/2020/07/28/mECuFLeJBrRvZp9.png)
+
+### 学生编程"大数据"分析
+
+在该模块，我们对学生的总体编程情况做了一个分析，对一些数据进行了可视化，也做了一些相关性分析，该部分会有一些有趣的结论和图表。
+
+总体**综合编程能力指数**分布图，绝大部分的学生的能力指数分布在80到90之间。
+
+![abilityhist.jpg](https://i.loli.net/2020/07/28/PvqagLRY5ASBds1.jpg)
+
+总体**拖延症指数**分布图，拖延症指数在40到60之间的人数最多，如果你的拖延症指数小于这个值，说明你没有拖延的坏习惯，如果你的拖延症指数高于这个值，就要反思一下自己在编程时是否有懈怠的表现。
+
+![delayhist.jpg](https://i.loli.net/2020/07/28/txUsyiJA3OMm8hn.jpg)
+
+总体**提交总次数**分布图，大部分的学生的提交总次数分布在300到400之间，也有少数提交次数过少的同学，那就要反思一下自己的学习态度了，也有提交次数超过2000的"提交狂魔"。
+
+![uploadhist.jpg](https://i.loli.net/2020/07/28/cGz1gRonTOMhX2N.jpg)
+
+总体**编程时间类型**分布图，绝大部分同学的编程时间类型为"晚上型"，即大部分的提交记录都在下午6点到晚上12点之间，看来软件学院的同学们大都喜欢在晚上编程。第二张图片是不同编程时间类型的同学的得分分布情况。
+
+![typebar.jpg](https://i.loli.net/2020/07/28/yhBDUXfFObvGNVA.jpg)
+
+![aVVEtJ.jpg](https://s1.ax1x.com/2020/07/28/aVVEtJ.jpg)
+
+总体**编程能力指数**分布图、总体**编程类型喜欢程度**分布图和总体**编程类型平均分**分布图，从中可以看出`图结构`类型的题目的三个指标都是最低，而值最高的不尽相同，从中可以看出`图结构`的题目是真的难而且我们根本学不会，建议老师以后可以~~多布置点~~少布置点。
+
+![aVE9de.jpg](https://s1.ax1x.com/2020/07/28/aVE9de.jpg)
+
+![aVEiid.jpg](https://s1.ax1x.com/2020/07/28/aVEiid.jpg)
+
+![aVEkRI.jpg](https://s1.ax1x.com/2020/07/28/aVEkRI.jpg)
+
+**编程能力相关性分析**热力图，我们想要探究一下在某种类型的题目上的表现较好或较差是否会影响其在另外的题目类型上的表现呢？相关性分析的结果可视化如下，读者可自行体会。
+
+![aVVm11.jpg](https://s1.ax1x.com/2020/07/28/aVVm11.jpg)
+
+**各种相关性分析**热力图，该部分我们画出了提交总次数、完成题目的数量、拖延症指数等变量的相关性分析的结果，如下两图所示。
+
+![aVVAk4.jpg](https://s1.ax1x.com/2020/07/28/aVVAk4.jpg)
+
+![aVVVh9.jpg](https://s1.ax1x.com/2020/07/28/aVVVh9.jpg)
